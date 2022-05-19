@@ -29,25 +29,23 @@ variable "use_existing_cloudwatch_log_group" {
 variable "name" {
   description = "The name of the Step Function"
   type        = string
-  default     = ""
 }
 
-variable "control-the-throttle" {
-  description = "value"
-  type = string
-}
-
-variable "throttle-up-definition" {
+variable "throttle-definition" {
   description = "The Amazon States Language definition of the Step Function"
   type        = string
-  default     = ""
+  default = ""
 }
 
-variable "throttle-down-definition" {
-  description = "The Amazon States Language definition of the Step Function"
-  type        = string
-  default     = ""
-}
+# variable "bandwidth" {
+#   type = number
+# }
+
+# variable "ReplicationConfigurationTemplateID" {
+#   type = string
+# }
+
+
 
 variable "role_arn" {
   description = "The Amazon Resource Name (ARN) of the IAM role to use for this Step Function"

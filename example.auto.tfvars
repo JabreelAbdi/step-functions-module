@@ -1,14 +1,18 @@
-role_name = "jabreel-step-function-role-throttle-up-or-down"
+role_name = "step-function-role"
 
-name = "step-function-throttle-up-or-down"
+name = "step-function-test"
 
 type = "express"
 
-throttle-up-definition = "{ \"Comment\": \"A description of my state machine\", \"StartAt\": \"DescribeReplicationConfigurationTemplates\", \"States\": { \"DescribeReplicationConfigurationTemplates\": { \"Type\": \"Task\", \"Next\": \"UpdateReplicationConfigurationTemplate\", \"Parameters\": {}, \"Resource\": \"arn:aws:states:::aws-sdk:mgn:describeReplicationConfigurationTemplates\" }, \"UpdateReplicationConfigurationTemplate\": { \"Type\": \"Task\", \"End\": true, \"Parameters\": { \"ReplicationConfigurationTemplateID\": \"rct-3ffe7f7058fa142b5\", \"BandwidthThrottling\": 50 }, \"Resource\": \"arn:aws:states:::aws-sdk:mgn:updateReplicationConfigurationTemplate\" } } }"
 
-throttle-down-definition = "{ \"Comment\": \"A description of my state machine\", \"StartAt\": \"DescribeReplicationConfigurationTemplates\", \"States\": { \"DescribeReplicationConfigurationTemplates\": { \"Type\": \"Task\", \"Parameters\": {}, \"Resource\": \"arn:aws:states:::aws-sdk:mgn:describeReplicationConfigurationTemplates\", \"Next\": \"UpdateReplicationConfiguration\" }, \"UpdateReplicationConfiguration\": { \"Type\": \"Task\", \"End\": true, \"Parameters\": { \"SourceServerID\": \"s-31900ae27011f89b9\", \"BandwidthThrottling\": 5 }, \"Resource\": \"arn:aws:states:::aws-sdk:mgn:updateReplicationConfiguration\" } } }"
+throttle-definition = " \"Comment\": \"A description of my state machine\", \"StartAt\": \"DescribeReplicationConfigurationTemplates\", \"States\": { \"DescribeReplicationConfigurationTemplates\": { \"Type\": \"Task\", \"Next\": \"UpdateReplicationConfigurationTemplate\", \"Parameters\": { \"ReplicationConfigurationTemplateIDs\": [ \"rct-3ffe7f7058fa142b5\" ] }, \"Resource\": \"arn:aws:states:::aws-sdk:mgn:describeReplicationConfigurationTemplates\" }, \"UpdateReplicationConfigurationTemplate\": { \"Type\": \"Task\", \"End\": true, \"Parameters\": { \"ReplicationConfigurationTemplateID\": \"rct-3ffe7f7058fa142b5\", \"BandwidthThrottling\": 45 }, \"Resource\": \"arn:aws:states:::aws-sdk:mgn:updateReplicationConfigurationTemplate\" } } }"
+# bandwidth = "50"
 
-control-the-throttle = "up"
+# bandwidth-down = ""
+
+# ReplicationConfigurationTemplateID = "rct-3ffe7f7058fa142b5"
+
+# ReplicationConfigurationTemplateID-down = ""
 
 logging_configuration = {
   include_execution_data = true
