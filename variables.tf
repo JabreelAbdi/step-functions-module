@@ -31,19 +31,13 @@ variable "name" {
   type        = string
 }
 
-variable "throttle-definition" {
-  description = "The Amazon States Language definition of the Step Function"
-  type        = string
-  default = ""
+variable "bandwidth" {
+  type = number
 }
 
-# variable "bandwidth" {
-#   type = number
-# }
-
-# variable "ReplicationConfigurationTemplateID" {
-#   type = string
-# }
+variable "ReplicationConfigurationTemplateID" {
+  type = string
+}
 
 
 

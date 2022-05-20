@@ -5,14 +5,9 @@ name = "step-function-test"
 type = "express"
 
 
-throttle-definition = " \"Comment\": \"A description of my state machine\", \"StartAt\": \"DescribeReplicationConfigurationTemplates\", \"States\": { \"DescribeReplicationConfigurationTemplates\": { \"Type\": \"Task\", \"Next\": \"UpdateReplicationConfigurationTemplate\", \"Parameters\": { \"ReplicationConfigurationTemplateIDs\": [ \"rct-3ffe7f7058fa142b5\" ] }, \"Resource\": \"arn:aws:states:::aws-sdk:mgn:describeReplicationConfigurationTemplates\" }, \"UpdateReplicationConfigurationTemplate\": { \"Type\": \"Task\", \"End\": true, \"Parameters\": { \"ReplicationConfigurationTemplateID\": \"rct-3ffe7f7058fa142b5\", \"BandwidthThrottling\": 45 }, \"Resource\": \"arn:aws:states:::aws-sdk:mgn:updateReplicationConfigurationTemplate\" } } }"
-# bandwidth = "50"
+bandwidth = 50
 
-# bandwidth-down = ""
-
-# ReplicationConfigurationTemplateID = "rct-3ffe7f7058fa142b5"
-
-# ReplicationConfigurationTemplateID-down = ""
+ReplicationConfigurationTemplateID = "rct-3ffe7f7058fa142b5"
 
 logging_configuration = {
   include_execution_data = true

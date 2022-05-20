@@ -18,7 +18,7 @@ resource "aws_sfn_state_machine" "this" {
   name = var.name
 
   role_arn   = var.use_existing_role ? var.role_arn : aws_iam_role.this[0].arn
-  definition = var.throttle-definition
+  definition = jsonencode(local.throttle-definition)
 
   dynamic "logging_configuration" {
     for_each = local.enable_logging ? [true] : []

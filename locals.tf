@@ -1,4 +1,34 @@
 locals {
+
+throttle-definition = {
+    Comment = "A description of my state machine"
+    StartAt = "DescribeReplicationConfigurationTemplates"
+    States = {
+      DescribeReplicationConfigurationTemplates = {
+        Next = "UpdateReplicationConfigurationTemplate"
+        Parameters = {
+          ReplicationConfigurationTemplateIDs = [
+            "rct-3ffe7f7058fa142b5,"
+          ]
+        }
+        Resource = "arn:aws:states:::aws-sdk:mgn:describeReplicationConfigurationTemplates"
+        Type = "Task"
+      }
+      UpdateReplicationConfigurationTemplate = {
+        End = true
+        Parameters = {
+          BandwidthThrottling = var.bandwidth
+          ReplicationConfigurationTemplateID = var.ReplicationConfigurationTemplateID
+        }
+        Resource = "arn:aws:states:::aws-sdk:mgn:updateReplicationConfigurationTemplate"
+        Type = "Task"
+      }
+    }
+  }
+
+
+
+
   # Map of all available IAM policies constructs for AWS services
   #
   # See more - https://docs.aws.amazon.com/step-functions/latest/dg/service-integration-iam-templates.html
