@@ -8,7 +8,7 @@ throttle-definition = {
         Next = "UpdateReplicationConfigurationTemplate"
         Parameters = {
           ReplicationConfigurationTemplateIDs = [
-            "rct-3ffe7f7058fa142b5,"
+            var.ReplicationConfigurationTemplateID
           ]
         }
         Resource = "arn:aws:states:::aws-sdk:mgn:describeReplicationConfigurationTemplates"
@@ -26,6 +26,37 @@ throttle-definition = {
     }
   }
 
+source-server-throttle = {
+    Comment: "A description of my state machine",
+    StartAt: "DescribeSourceServers",
+    States: {
+      DescribeSourceServers: {
+        Type: "Task",
+        "Parameters": {
+        filters: {
+          SourceServerIDs: [
+            "s-39d2b88af1e645caf",
+            "s-31900ae27011f89b9"
+          ]
+        }
+      },
+        Resource: "arn:aws:states:::aws-sdk:mgn:describeSourceServers",
+        Next: "UpdateReplicationConfiguration"
+      },
+      UpdateReplicationConfiguration: {
+        Type: "Task",
+        End: true,
+        Parameters: {
+          SourceServerID: [
+            "s-39d2b88af1e645caf",
+            "s-31900ae27011f89b9"
+          ],
+          BandwidthThrottling: 45
+        },
+        Resource: "arn:aws:states:::aws-sdk:mgn:updateReplicationConfiguration"
+      }
+    }
+  }
 
 
 

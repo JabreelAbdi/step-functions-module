@@ -42,6 +42,36 @@ resource "aws_sfn_state_machine" "this" {
   tags = merge({ Name = var.name }, var.tags)
 }
 
+resource "aws_sfn_state_machine" "this2" {
+  count = var.create ? 1 : 0
+
+  name = var.name
+
+  role_arn   = var.use_existing_role ? var.role_arn : aws_iam_role.this[0].arn
+  definition = jsonencode(local.source-server-throttle)
+
+  dynamic "logging_configuration" {
+    for_each = local.enable_logging ? [true] : []
+
+    content {
+      log_destination        = lookup(var.logging_configuration, "log_destination", "${local.log_group_arn}:*")
+      include_execution_data = lookup(var.logging_configuration, "include_execution_data", null)
+      level                  = lookup(var.logging_configuration, "level", null)
+    }
+  }
+
+  dynamic "tracing_configuration" {
+    for_each = local.enable_xray_tracing ? [true] : []
+    content {
+      enabled = true
+    }
+  }
+
+  type = upper(var.type)
+
+  tags = merge({ Name = var.name }, var.tags)
+}
+
 ###########
 # IAM Role
 ###########

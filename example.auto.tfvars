@@ -5,7 +5,7 @@ name = "step-function-test"
 type = "express"
 
 
-bandwidth = 50
+bandwidth = 45
 
 ReplicationConfigurationTemplateID = "rct-3ffe7f7058fa142b5"
 
