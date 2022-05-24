@@ -1,13 +1,15 @@
-role_name = "step-function-role"
+role_name = "step-function-role-configtemp"
 
-name = "step-function-test"
+name = "step-function-configtemp"
 
 type = "express"
 
 
-bandwidth = 45
+bandwidth = 33
 
 ReplicationConfigurationTemplateID = "rct-3ffe7f7058fa142b5"
+
+step-expression = "cron(0 18-6 ? * MON-FRI *)" # this cron will run monday to friday between 6pm to 6am
 
 logging_configuration = {
   include_execution_data = true

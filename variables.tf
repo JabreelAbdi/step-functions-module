@@ -248,3 +248,9 @@ variable "policy_statements" {
   type        = any
   default     = {}
 }
+
+variable "step-expression" {
+  description = "expression for step function treiggering/timing"
+  type        = string
+
+}

@@ -1,6 +1,6 @@
 locals {
 
-throttle-definition = {
+  throttle-definition = {
     Comment = "A description of my state machine"
     StartAt = "DescribeReplicationConfigurationTemplates"
     States = {
@@ -12,51 +12,51 @@ throttle-definition = {
           ]
         }
         Resource = "arn:aws:states:::aws-sdk:mgn:describeReplicationConfigurationTemplates"
-        Type = "Task"
+        Type     = "Task"
       }
       UpdateReplicationConfigurationTemplate = {
         End = true
         Parameters = {
-          BandwidthThrottling = var.bandwidth
+          BandwidthThrottling                = var.bandwidth
           ReplicationConfigurationTemplateID = var.ReplicationConfigurationTemplateID
         }
         Resource = "arn:aws:states:::aws-sdk:mgn:updateReplicationConfigurationTemplate"
-        Type = "Task"
+        Type     = "Task"
       }
     }
   }
 
-source-server-throttle = {
-    Comment: "A description of my state machine",
-    StartAt: "DescribeSourceServers",
-    States: {
-      DescribeSourceServers: {
-        Type: "Task",
-        "Parameters": {
-        filters: {
-          SourceServerIDs: [
-            "s-39d2b88af1e645caf",
-            "s-31900ae27011f89b9"
-          ]
-        }
-      },
-        Resource: "arn:aws:states:::aws-sdk:mgn:describeSourceServers",
-        Next: "UpdateReplicationConfiguration"
-      },
-      UpdateReplicationConfiguration: {
-        Type: "Task",
-        End: true,
-        Parameters: {
-          SourceServerID: [
-            "s-39d2b88af1e645caf",
-            "s-31900ae27011f89b9"
-          ],
-          BandwidthThrottling: 45
-        },
-        Resource: "arn:aws:states:::aws-sdk:mgn:updateReplicationConfiguration"
-      }
-    }
-  }
+  # source-server-throttle = {
+  #   Comment : "A description of my state machine",
+  #   StartAt : "DescribeSourceServers",
+  #   States : {
+  #     DescribeSourceServers : {
+  #       Type : "Task",
+  #       "Parameters" : {
+  #         filters : {
+  #           SourceServerIDs : [
+  #             "s-39d2b88af1e645caf",
+  #             "s-31900ae27011f89b9"
+  #           ]
+  #         }
+  #       },
+  #       Resource : "arn:aws:states:::aws-sdk:mgn:describeSourceServers",
+  #       Next : "UpdateReplicationConfiguration"
+  #     },
+  #     UpdateReplicationConfiguration : {
+  #       Type : "Task",
+  #       End : true,
+  #       Parameters : {
+  #         SourceServerID : [
+  #           "s-39d2b88af1e645caf",
+  #           "s-31900ae27011f89b9"
+  #         ],
+  #         BandwidthThrottling : 45
+  #       },
+  #       Resource : "arn:aws:states:::aws-sdk:mgn:updateReplicationConfiguration"
+  #     }
+  #   }
+  # }
 
 
 

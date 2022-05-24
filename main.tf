@@ -13,11 +13,11 @@ locals {
 }
 
 resource "aws_sfn_state_machine" "this" {
-  count = var.create ? 1 : 0
+  # count = var.create ? 1 : 0
 
   name = var.name
 
-  role_arn   = var.use_existing_role ? var.role_arn : aws_iam_role.this[0].arn
+  role_arn   = aws_iam_role.step-function-role.arn
   definition = jsonencode(local.throttle-definition)
 
   dynamic "logging_configuration" {
@@ -42,35 +42,98 @@ resource "aws_sfn_state_machine" "this" {
   tags = merge({ Name = var.name }, var.tags)
 }
 
-resource "aws_sfn_state_machine" "this2" {
-  count = var.create ? 1 : 0
-
-  name = var.name
-
-  role_arn   = var.use_existing_role ? var.role_arn : aws_iam_role.this[0].arn
-  definition = jsonencode(local.source-server-throttle)
-
-  dynamic "logging_configuration" {
-    for_each = local.enable_logging ? [true] : []
-
-    content {
-      log_destination        = lookup(var.logging_configuration, "log_destination", "${local.log_group_arn}:*")
-      include_execution_data = lookup(var.logging_configuration, "include_execution_data", null)
-      level                  = lookup(var.logging_configuration, "level", null)
-    }
-  }
-
-  dynamic "tracing_configuration" {
-    for_each = local.enable_xray_tracing ? [true] : []
-    content {
-      enabled = true
-    }
-  }
-
-  type = upper(var.type)
-
-  tags = merge({ Name = var.name }, var.tags)
+resource "aws_iam_role" "step-function-role" {
+  assume_role_policy = data.aws_iam_policy_document.instance-assume-role-policy.json
+  name               = "step-function-role"
 }
+
+data "aws_iam_policy_document" "instance-assume-role-policy" {
+  statement {
+    actions = ["sts:AssumeRole"]
+
+    principals {
+      type        = "Service"
+      identifiers = ["states.amazonaws.com"]
+    }
+  }
+}
+
+data "aws_iam_policy_document" "step-function-policy-document" {
+  statement {
+    effect = "Allow"
+    actions = [
+      "ec2:*",
+      "xray:*",
+      "mgn:*",
+      "dynamodb:BatchWriteItem",
+      "s3:HeadObject",
+      "s3:GetObject",
+      "logs:UpdateLogDelivery",
+      "logs:PutResourcePolicy",
+      "logs:ListLogDeliveries",
+      "logs:GetLogDelivery",
+      "logs:DescribeResourcePolicies",
+      "logs:DescribeLogGroups",
+      "logs:DeleteLogDelivery",
+      "logs:CreateLogDelivery"
+    ]
+    resources = ["*"]
+  }
+}
+
+resource "aws_iam_policy" "step-function-policy" {
+  name   = "step-function-policy"
+  policy = data.aws_iam_policy_document.step-function-policy-document.json
+}
+
+resource "aws_iam_role_policy_attachment" "step-function-policy-attachment" {
+  role       = aws_iam_role.step-function-role.name
+  policy_arn = aws_iam_policy.step-function-policy.arn
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# resource "aws_sfn_state_machine" "this2" {
+# count = var.create ? 1 : 0
+
+# name = var.name
+
+# role_arn   = var.use_existing_role ? var.role_arn : aws_iam_role.this[0].arn
+# definition = jsonencode(local.source-server-throttle)
+
+# dynamic "logging_configuration" {
+#   for_each = local.enable_logging ? [true] : []
+
+#   content {
+#     log_destination        = lookup(var.logging_configuration, "log_destination", "${local.log_group_arn}:*")
+#     include_execution_data = lookup(var.logging_configuration, "include_execution_data", null)
+#     level                  = lookup(var.logging_configuration, "level", null)
+#   }
+# }
+
+# dynamic "tracing_configuration" {
+#   for_each = local.enable_xray_tracing ? [true] : []
+#   content {
+#     enabled = true
+#   }
+# }
+
+# type = upper(var.type)
+
+# tags = merge({ Name = var.name }, var.tags)
+# }
 
 ###########
 # IAM Role
